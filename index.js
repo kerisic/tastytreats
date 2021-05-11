@@ -16,7 +16,7 @@ app.use("/public", express.static(__dirname + '/public'));
 app.use("/data", express.static(__dirname + '/data'));
 
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.post('/contact',
