@@ -4,10 +4,7 @@ const path = require('path');
 const fs = require('fs');
 var request = require('request');
 const app = express();
-const {
-  body,
-  validationResult
-} = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -22,7 +19,6 @@ app.get('/', function (req, res) {
 });
 
 app.post('/contact',
-  // check if email is valid
   body('email').isEmail().normalizeEmail(),
   (req, res) => {
     const errors = validationResult(req);
@@ -30,13 +26,14 @@ app.post('/contact',
     if (!errors.isEmpty()) {
       return res.send("Email is invalid!");
     }
-    
+
     var secretKey = process.env.SECRETKEY;
     var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey +
       "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.socket.remoteAddress;
 
     request(verificationUrl, function (error, response, body) {
       body = JSON.parse(body);
+
       if (body.success !== undefined && !body.success) {
         return res.send("Humans allowed only!");
       }
@@ -60,7 +57,6 @@ app.post('/contact',
       res.send("Thank you for your contact, we'll be in touch soon!")
     });
 
-    
   });
 
 app.listen(8080, () => console.log(`Started server at http://localhost:8080!`));
