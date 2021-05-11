@@ -2,7 +2,8 @@ require('dotenv').config()
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-var request = require('request');
+const request = require('request');
+const port = process.env.PORT || 8080;
 const app = express();
 const { body, validationResult } = require('express-validator');
 
@@ -59,4 +60,4 @@ app.post('/contact',
 
   });
 
-app.listen(8080, () => console.log(`Started server at http://localhost:8080!`));
+app.listen(port, () => console.log(`Started server at http://localhost:8080!`));
