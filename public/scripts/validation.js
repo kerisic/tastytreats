@@ -12,4 +12,5 @@ $(document).ready(function () {
           alert("Please input a message");
       }
   });
+  
 });

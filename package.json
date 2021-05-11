@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "dotenv": "^9.0.2",
     "express": "^4.17.1",
-    "express-validator": "^6.11.1"
+    "express-recaptcha": "^5.0.2",
+    "express-validator": "^6.11.1",
+    "request": "^2.88.2"
   },
   "devDependencies": {},
   "scripts": {

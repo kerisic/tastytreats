@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+var request = require('request');
 const app = express();
 const {
   body,
@@ -20,6 +22,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/contact',
+  // check if email is valid
   body('email').isEmail().normalizeEmail(),
   (req, res) => {
     const errors = validationResult(req);
@@ -27,25 +30,37 @@ app.post('/contact',
     if (!errors.isEmpty()) {
       return res.send("Email is invalid!");
     }
+    
+    var secretKey = process.env.SECRETKEY;
+    var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey +
+      "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.socket.remoteAddress;
 
-    let data = req.body
-    let contactInfo = `
-      Name: ${data.name}
-      Email: ${data.email}
-      Message: ${data.message}
-      Newsletter Subcription: ${data.newsletter}
-      `;
+    request(verificationUrl, function (error, response, body) {
+      body = JSON.parse(body);
+      if (body.success !== undefined && !body.success) {
+        return res.send("Humans allowed only!");
+      }
+      let data = req.body
+      let contactInfo = `
+        Name: ${data.name}
+        Email: ${data.email}
+        Message: ${data.message}
+        Newsletter Subcription: ${data.newsletter}
+        `;
 
-    let name = data.name.split(" ").join("");
-    let date = new Date().toISOString();
-    let path = 'data/' + name + date + '.txt';
+      let name = data.name.split(" ").join("");
+      let date = new Date().toISOString();
+      let path = 'data/' + name + date + '.txt';
 
-    fs.writeFile(path, contactInfo, (err) => {
-      if (err) throw err;
-      console.log('form data saved!');
+      fs.writeFile(path, contactInfo, (err) => {
+        if (err) throw err;
+        console.log('form data saved!');
+      });
+
+      res.send("Thank you for your contact, we'll be in touch soon!")
     });
 
-    res.send("Thank you for your contact, we'll be in touch soon!")
+    
   });
 
 app.listen(8080, () => console.log(`Started server at http://localhost:8080!`));
