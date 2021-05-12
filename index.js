@@ -13,7 +13,8 @@ const {
 
 const serviceAccount = require('./public/scripts/serviceAccountKey.json');
 const { database } = require('firebase-admin');
-const { Console } = require('console');
+const { isDate } = require('util');
+const { deflate } = require('zlib');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -70,7 +71,8 @@ app.post('/contact',
         name: data.name,
         email: data.email,
         message: data.message,
-        newsletter: data.newsletter
+        newsletter: data.newsletter,
+        timestamp: admin.firestore.Timestamp.now(),
       });
 
       fs.writeFile(path, contactInfo, (err) => {
@@ -85,7 +87,7 @@ app.post('/contact',
   });
 
 app.get('/inquiries', async (req, res) => {
-  const inquiriesRef = db.collection('inquiries');
+  const inquiriesRef = db.collection('inquiries').orderBy('timestamp', 'desc');
   const snapshot = await inquiriesRef.get();
   let inquiries = [];
   snapshot.forEach(doc => {
@@ -93,7 +95,8 @@ app.get('/inquiries', async (req, res) => {
     name: doc.data().name,
     email: doc.data().email,
     message: doc.data().message,
-    newsletter: doc.data().newsletter
+    newsletter: doc.data().newsletter, 
+    timestamp: doc.data().timestamp.toDate()
   })
   });
   res.json(inquiries);
