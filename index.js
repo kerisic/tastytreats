@@ -76,11 +76,13 @@ app.post('/contact',
       });
 
       let path = 'data/' + name + date + '.txt';
-
-      fs.writeFile(path, contactInfo, (err) => {
-        if (err) throw err;
-        console.log('form data saved!');
-      });
+      
+      if (process.env.HEROKU !== true) {
+        fs.writeFile(path, contactInfo, (err) => {
+          if (err) throw err;
+          console.log('form data saved!');
+        });
+      }
 
       res.sendFile('public/view/thanks.html', {
         root: __dirname
