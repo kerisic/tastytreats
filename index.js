@@ -10,8 +10,6 @@ const app = express();
 const { body, validationResult } = require('express-validator');
 
 const serviceAccount = require('./public/scripts/serviceAccountKey.json');
-const e = require('express');
-const { Console } = require('console');
 
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
@@ -28,6 +26,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/contact',
+  // server-side checker for email validity
   body('email').isEmail().normalizeEmail(),
   (req, res) => {
     const errors = validationResult(req);
@@ -35,18 +34,19 @@ app.post('/contact',
     if (!errors.isEmpty()) {
       return res.send("Email is invalid!");
     }
-
+    
     let secretKey = process.env.SECRETKEY;
     let verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey +
       "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.socket.remoteAddress;
-
+    
+    // check if captcha is successful
     request(verificationUrl, function (error, response, body) {
       body = JSON.parse(body);
 
       if (body.success !== undefined && !body.success) {
         return res.send("Captcha failed... Humans allowed only!");
       }
-
+      
       let newsletter;
       if (req.body.newsletter === "Yes") {
         newsletter = "Yes"
@@ -66,7 +66,8 @@ app.post('/contact',
       let date = new Date().toISOString();
       
       const docRef = db.collection('inquiries').doc(name + date);
-
+      
+      // create document on firebase with form data
       docRef.set({
         name: data.name,
         email: data.email,
@@ -74,10 +75,11 @@ app.post('/contact',
         newsletter: newsletter,
         timestamp: admin.firestore.Timestamp.now(),
       });
-
-      let path = 'data/' + name + date + '.txt';
       
+      // if enviroment is heroku, don't write file
       if (process.env.HEROKU !== true) {
+        // else, write to data folder
+        let path = 'data/' + name + date + '.txt';
         fs.writeFile(path, contactInfo, (err) => {
           if (err) throw err;
           console.log('form data saved!');
@@ -91,6 +93,7 @@ app.post('/contact',
   });
 
 app.get('/inquiries', async (req, res) => {
+  // connect to firebase and return all inquiries as json
   const inquiriesRef = db.collection('inquiries').orderBy('timestamp', 'desc');
   const snapshot = await inquiriesRef.get();
   let inquiries = [];
@@ -107,6 +110,7 @@ app.get('/inquiries', async (req, res) => {
 });
 
 app.get('/show', function (req, res) {
+  // display all inquiries
   res.sendFile('public/view/inquiries.html', {
     root: __dirname
   });

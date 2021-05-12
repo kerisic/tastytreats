@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+    // client-side checker to ensure values are entered
     $("#submit").click(function (e) {
         let name = document.getElementById('name').value;
         let email = document.getElementById('email').value;

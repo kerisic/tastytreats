@@ -1,17 +1,20 @@
 getInquiries();
 
+// retrieve inquiries from backend
 function getInquiries() {
   fetch('https://warm-inlet-62149.herokuapp.com/inquiries')
     .then(response => response.json())
     .then(data => displayInquiries(data))
 }
 
+// create html for inquiries
 function displayInquiries(inquiries) {
   inquiries.forEach(inquiry => {
     createInquiry(inquiry)
   });
 }
 
+// create individual inquiries and append to container
 function createInquiry(inquiry) {
   const div = document.createElement("div");
   div.classList.add("inquiry-item");
