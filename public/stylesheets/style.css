@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+
+body {
+  background-color: #FFDEE9;
+  background-image: linear-gradient(90deg, #FFDEE9 0%, #B5FFFC 100%);
+  font-family: 'Lato', sans-serif;
+}
+
+#formContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 600px;
+  flex-direction: column;
+  color: rgb(158, 154, 154);
+}
+
+.box {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+h1 {
+  font-size: 3em;
+  text-align: center;
+  font-family: 'Pacifico', cursive;
+}
+
+h2 {
+  text-align: center;
+  color: #000;
+  font-family: 'Lato', sans-serif;
+}
+
+#name {
+  border: 0px;
+  border-bottom: 2px solid #eee;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 300px;
+  outline: none;
+}
+
+#email {
+  border: 0px;
+  border-bottom: 2px solid #eee;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 300px;
+  outline: none;
+}
+
+#message {
+  border: 0px;
+  border-bottom: 2px solid #eee;
+  width: 300px;
+  margin-top: 10px;
+  outline: none;
+}
+
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: rgb(158, 154, 154);
+  font-family: 'Lato', sans-serif;
+}
+
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: rgb(158, 154, 154);
+  font-family: 'Lato', sans-serif;
+}
+
+:-ms-input-placeholder {
+  /* IE 10+ */
+  color: rgb(158, 154, 154);
+  font-family: 'Lato', sans-serif;
+}
+
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: rgb(158, 154, 154);
+  font-family: 'Lato', sans-serif;
+}
+
+#submit {
+  padding: 5px 15px;
+  background-color: #98e7e7;
+  border: 0 none;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 20px;
+  width: 300px;
+  margin: 0 auto;
+  color: white;
+  font-family: 'Lato', sans-serif;
+}

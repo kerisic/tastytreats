@@ -5,20 +5,30 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="public/stylesheets/style.css">
   <title>Tasty Treats</title>
 </head>
 <body>
   <script src="/public/scripts/validation.js"></script>
   <script src='https://www.google.com/recaptcha/api.js'></script>
+
+  <h1>Tasty Treats</h1>
+  <div id="formContainer">
+    <div class="box">
+    <h2>How can we help?</h1>
   <form id="contactForm" method="post" action="/contact">
-    Name: <input type="text" id="name" name="name" required><br>
-    Email: <input type="email" id="email" name="email" required><br>
-    Message: <textarea class="input" id="message" name="message" rows="4" required autofocus></textarea><br>
-    <input type="checkbox" name="newsletter" id="newsletter" value="Yes" required> 
+    <span class="label">Name:</span><br>
+    <input type="text" id="name" name="name" placeholder="Enter your name" required><br>
+    <span class="label">Email:</span><br>
+    <input type="email" id="email" name="email" placeholder="Enter your email address" required><br>
+    <span class="label">Message:</span><br>
+    <textarea class="input" id="message" name="message" rows="4" placeholder="Your message here" required autofocus></textarea><br>
+    <br><input type="checkbox" name="newsletter" id="newsletter" value="Yes" required>
     <label for="newsletter">Tick to subscribe to our newsletter</label><br>
-    <div class="g-recaptcha" data-sitekey="6LetEtAaAAAAADaylE_hOpswI7WyqDaqlr2l5vzr"></div>
+    <br><div class="g-recaptcha" data-sitekey="6LetEtAaAAAAADaylE_hOpswI7WyqDaqlr2l5vzr"></div><br>
     <input type="submit" id="submit" value="Submit">
   </form>
- 
+</div>
+</div>
 </body>
 </html>
