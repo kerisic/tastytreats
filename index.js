@@ -7,26 +7,18 @@ const fs = require('fs');
 const request = require('request');
 const port = process.env.PORT || 8080;
 const app = express();
-const {
-  body,
-  validationResult
-} = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 const serviceAccount = require('./public/scripts/serviceAccountKey.json');
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
 const db = admin.firestore();
 
 app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static(__dirname + '/public'));
 app.use("/data", express.static(__dirname + '/data'));
-
 app.use(cors())
 
 app.get('/', function (req, res) {
@@ -62,9 +54,9 @@ app.post('/contact',
 
       let name = data.name.split(" ").join("");
       let date = new Date().toISOString();
-      let path = 'data/' + name + date + '.txt';
+      
 
-      const docRef = db.collection('inquiries').doc(name+date);
+      const docRef = db.collection('inquiries').doc(name + date);
 
       docRef.set({
         name: data.name,
@@ -73,6 +65,8 @@ app.post('/contact',
         newsletter: data.newsletter,
         timestamp: admin.firestore.Timestamp.now(),
       });
+
+      let path = 'data/' + name + date + '.txt';
 
       fs.writeFile(path, contactInfo, (err) => {
         if (err) throw err;
@@ -90,13 +84,13 @@ app.get('/inquiries', async (req, res) => {
   const snapshot = await inquiriesRef.get();
   let inquiries = [];
   snapshot.forEach(doc => {
-  inquiries.push({
-    name: doc.data().name,
-    email: doc.data().email,
-    message: doc.data().message,
-    newsletter: doc.data().newsletter, 
-    timestamp: doc.data().timestamp.toDate()
-  })
+    inquiries.push({
+      name: doc.data().name,
+      email: doc.data().email,
+      message: doc.data().message,
+      newsletter: doc.data().newsletter,
+      timestamp: doc.data().timestamp.toDate()
+    })
   });
   res.json(inquiries);
 });
@@ -105,6 +99,10 @@ app.get('/show', function (req, res) {
   res.sendFile('public/view/inquiries.html', {
     root: __dirname
   });
+});
+
+app.get('*', function(req, res){
+  res.status(404).send('Page not found!');
 });
 
 app.listen(port, () => console.log(`Started server at http://localhost:8080!`));

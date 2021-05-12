@@ -1,6 +1,0 @@
-
-        Name: james
-        Email: whats@example.com
-        Message: wewerwfwefwe
-        Newsletter Subcription: Yes
-        

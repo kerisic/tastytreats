@@ -1,6 +1,0 @@
-
-        Name: christine
-        Email: christine@example.com
-        Message: 1234566erterge
-        Newsletter Subcription: Yes
-        

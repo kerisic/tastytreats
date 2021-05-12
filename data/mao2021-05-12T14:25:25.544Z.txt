@@ -1,6 +1,0 @@
-
-        Name: mao
-        Email: mao@example.comw
-        Message: ewefwerwgt
-        Newsletter Subcription: Yes
-        

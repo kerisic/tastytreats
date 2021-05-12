@@ -1,6 +1,0 @@
-
-        Name: james
-        Email: james@hotmail.com
-        Message: hey you jeemsy poo
-        Newsletter Subcription: Yes
-        

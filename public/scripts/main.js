@@ -12,4 +12,8 @@ $(document).ready(function () {
             alert("Please input a message");
         }
     });
+
+    $('h1').click(function () {
+        window.location.replace('/')
+    });
 });
