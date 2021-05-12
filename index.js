@@ -1,5 +1,6 @@
 require('dotenv').config()
 const admin = require('firebase-admin');
+const cors = require('cors')
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -12,9 +13,6 @@ const {
 } = require('express-validator');
 
 const serviceAccount = require('./public/scripts/serviceAccountKey.json');
-const { database } = require('firebase-admin');
-const { isDate } = require('util');
-const { deflate } = require('zlib');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -26,9 +24,10 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
-
 app.use("/public", express.static(__dirname + '/public'));
 app.use("/data", express.static(__dirname + '/data'));
+
+app.use(cors())
 
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));

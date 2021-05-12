@@ -100,3 +100,9 @@ h2 {
   width: 380px;
   margin: 0 auto;
 }
+#inquiryContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
