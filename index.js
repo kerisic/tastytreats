@@ -10,6 +10,8 @@ const app = express();
 const { body, validationResult } = require('express-validator');
 
 const serviceAccount = require('./public/scripts/serviceAccountKey.json');
+const e = require('express');
+const { Console } = require('console');
 
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
@@ -34,8 +36,8 @@ app.post('/contact',
       return res.send("Email is invalid!");
     }
 
-    var secretKey = process.env.SECRETKEY;
-    var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey +
+    let secretKey = process.env.SECRETKEY;
+    let verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey +
       "&response=" + req.body['g-recaptcha-response'] + "&remoteip=" + req.socket.remoteAddress;
 
     request(verificationUrl, function (error, response, body) {
@@ -44,25 +46,32 @@ app.post('/contact',
       if (body.success !== undefined && !body.success) {
         return res.send("Captcha failed... Humans allowed only!");
       }
+
+      let newsletter;
+      if (req.body.newsletter === "Yes") {
+        newsletter = "Yes"
+      } else {
+        newsletter = "No"
+      }
+
       let data = req.body
       let contactInfo = `
         Name: ${data.name}
         Email: ${data.email}
         Message: ${data.message}
-        Newsletter Subcription: ${data.newsletter}
+        Newsletter Subcription: ${newsletter}
         `;
 
       let name = data.name.split(" ").join("");
       let date = new Date().toISOString();
       
-
       const docRef = db.collection('inquiries').doc(name + date);
 
       docRef.set({
         name: data.name,
         email: data.email,
         message: data.message,
-        newsletter: data.newsletter,
+        newsletter: newsletter,
         timestamp: admin.firestore.Timestamp.now(),
       });
 
