@@ -26,7 +26,7 @@ function createInquiry(inquiry) {
            <div class="label">Message</div>
            <div class="listMessage">${inquiry.message}</div>
            <div class="label">Newsletter subscription</div>
-           <div class="listMessage">${inquiry.message}</div>
+           <div class="listMessage">${inquiry.newsletter}</div>
            <div class="label">Submitted</div>
            <div class="listDate">${date + " " + time}</div>
            </div>
