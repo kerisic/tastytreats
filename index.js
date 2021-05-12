@@ -1,11 +1,25 @@
 require('dotenv').config()
+const admin = require('firebase-admin');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const request = require('request');
 const port = process.env.PORT || 8080;
 const app = express();
-const { body, validationResult } = require('express-validator');
+const {
+  body,
+  validationResult
+} = require('express-validator');
+
+const serviceAccount = require('./public/scripts/serviceAccountKey.json');
+const { database } = require('firebase-admin');
+const { Console } = require('console');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore();
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -36,7 +50,7 @@ app.post('/contact',
       body = JSON.parse(body);
 
       if (body.success !== undefined && !body.success) {
-        return res.send("Humans allowed only!");
+        return res.send("Captcha failed... Humans allowed only!");
       }
       let data = req.body
       let contactInfo = `
@@ -50,14 +64,45 @@ app.post('/contact',
       let date = new Date().toISOString();
       let path = 'data/' + name + date + '.txt';
 
+      const docRef = db.collection('inquiries').doc(name+date);
+
+      docRef.set({
+        name: data.name,
+        email: data.email,
+        message: data.message,
+        newsletter: data.newsletter
+      });
+
       fs.writeFile(path, contactInfo, (err) => {
         if (err) throw err;
         console.log('form data saved!');
       });
 
-      res.send("Thank you for your contact, we'll be in touch soon!")
+      res.sendFile('public/view/thanks.html', {
+        root: __dirname
+      });
     });
-
   });
+
+app.get('/inquiries', async (req, res) => {
+  const inquiriesRef = db.collection('inquiries');
+  const snapshot = await inquiriesRef.get();
+  let inquiries = [];
+  snapshot.forEach(doc => {
+  inquiries.push({
+    name: doc.data().name,
+    email: doc.data().email,
+    message: doc.data().message,
+    newsletter: doc.data().newsletter
+  })
+  });
+  res.json(inquiries);
+});
+
+app.get('/show', function (req, res) {
+  res.sendFile('public/view/inquiries.html', {
+    root: __dirname
+  });
+});
 
 app.listen(port, () => console.log(`Started server at http://localhost:8080!`));
